@@ -7,5 +7,6 @@
 ## SVC
 
 ## Jenkins
+Jenkins es un servidor de automatización de código abierto y autocontenido que se puede utilizar para automatizar diversas tareas relacionadas con la construcción, prueba y entrega o implementación de software.
 
-Jenkins is a self-contained, open source automation server
+Jenkins se puede instalar a través de paquetes nativos del sistema, Docker o incluso ejecutarse de forma independiente en cualquier máquina con un entorno de ejecución de Java (JRE) instalado.
