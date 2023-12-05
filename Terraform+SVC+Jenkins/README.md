@@ -1,7 +1,9 @@
 # Descripción de las Herramientas utilizadas para el desarrollo de la práctica
 
 ## Github
+GitHub es una plataforma de desarrollo colaborativo basada en la web que utiliza el sistema de control de versiones Git. Permite a los desarrolladores almacenar, gestionar y compartir proyectos de software, así como colaborar en código de manera eficiente.
 
+En GitHub, los usuarios pueden alojar repositorios de código, controlar versiones, realizar seguimiento de problemas (issues), proponer cambios (pull requests), y trabajar en equipos de forma coordinada. Ofrece herramientas para la gestión de proyectos, seguimiento de errores, y facilita la colaboración entre desarrolladores a nivel global. GitHub es ampliamente utilizado tanto por individuos como por empresas para alojar proyectos de código abierto y privado, ofreciendo una plataforma robusta para el desarrollo y la colaboración en el mundo del software
 ## Terraform
 Terraform es una herramienta de código abierto para automatizar la configuración de infraestructura. Permite definir y administrar recursos en la nube usando código, facilitando la creación, modificación y eliminación eficiente de recursos.
 
