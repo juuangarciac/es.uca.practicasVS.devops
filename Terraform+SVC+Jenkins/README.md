@@ -83,7 +83,7 @@ Jenkins se puede instalar a través de paquetes nativos del sistema, Docker o in
         - **`"practicasVS/Terraform+SVC+Jenkins"`**: Especifica el contexto de construcción. Todos los archivos y directorios dentro de esta ruta se enviarán al daemon de Docker para su procesamiento durante la construcción.
 
     - Corremos nuestra propia imagen **`myjenkins-blueocean:2.426.1-1`** como contenedor de Docker usando el siguiente comando:
-
+        ### Start Jenkins
         <pre>
             docker run \
                 --name jenkins-blueocean \
@@ -125,3 +125,22 @@ Después de desbloquear Jenkins, nos aparecerá la página **Customize Jenkins**
 En esta página clickamos en **Install suggested plugins**. 
 
 ## Crear el primero usuario adminsitrador
+
+Rellenamos el formulario para crear el primer usuario administrador, una vez finalizado clickar **Save and Finish**. Después de configurar también la URL (dejaremos la default), nos deberá salir una página como la [siguiente](./img/img03.png)
+
+## Stopping and restarting Jenkins
+Como recordatorio, podemos parar nuestro contenedor de Docker ejecutando el siguiente comando:
+<pre>docker stop jenkins-blueocean jenkins-docker</pre>
+
+Para volver a lanzarlo, ejecutamos de nuevo el comando [run...](###start-jenkins)
+
+# Fork and clone the sample repository
+
+1. Fork [simple-python-pyinstaller-app](https://github.com/jenkins-docs/simple-python-pyinstaller-app) y clonarlo localmente a nuestra máquina. 
+<pre>
+    sudo mkdir /home/<user-name>/GitHub
+    cd /home/<user-name>/GitHub
+    git clone https://github.com/juuangarciac/simple-python-pyinstaller-app
+</pre>
+
+# Create your Pipeline Project in Jenkins
