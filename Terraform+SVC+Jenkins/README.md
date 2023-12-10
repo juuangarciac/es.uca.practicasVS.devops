@@ -102,6 +102,6 @@ Jenkins se puede instalar a través de paquetes nativos del sistema, Docker o in
             myjenkins-blueocean:2.426.1-1 
         </pre>
 
-Enlace a [Interfaz Web de Jenkins](localhost:8080).
+Enlace a [Interfaz Web de Jenkins](http://localhost:8080).
 
-Enlace a [Comunicación entre Servidor Jenkins y Agentes Remotos](localhost:5000).
+Enlace a [Comunicación entre Servidor Jenkins y Agentes Remotos](http://localhost:5000).
