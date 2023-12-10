@@ -105,3 +105,23 @@ Jenkins se puede instalar a través de paquetes nativos del sistema, Docker o in
 Enlace a [Interfaz Web de Jenkins](http://localhost:8080).
 
 Enlace a [Comunicación entre Servidor Jenkins y Agentes Remotos](http://localhost:5000).
+
+# Setup wizard
+
+## Desbloqueando Jenkins
+
+1. Desplegamos la interfaz de Jenkins usando el comando:
+<pre>docker logs jenkins-blueocean</pre>
+
+2. Copiar la contraseña auto-generada.
+    [Imagen ejemplo](./img/img02.png)
+
+3. En la interfaz web de Jenkins, pegamos la contraseña en el campo **Administrator password** y clickamos en **Continue**
+
+## Personalizar Jenkins con plugins
+
+Después de desbloquear Jenkins, nos aparecerá la página **Customize Jenkins**.
+
+En esta página clickamos en **Install suggested plugins**. 
+
+## Crear el primero usuario adminsitrador
