@@ -34,62 +34,7 @@ sudo apt update && sudo apt install terraform
 
 2. Dentro del directorio de trabajo, inicializa un proyecto Terraform con el siguiente comando: **`terraform init`** 
 
-3. Se creará un archivo de configuración **`main.tf`** de Terraform:
-<pre>
-terraform {
-    required_providers {
-        docker = {
-            source = "kreuzwerker/docker"
-            version = "~> 3.0.1"
-        }
-    }
-}
-
-provider "docker" {}
-
-resource "docker_image" "jenkins-docker" {
-    name            = "docker:dind"
-    keep_locally    = false    
-}
-
-resource "docker_container" "jenkins-docker-container" {
-    image = docker_image.jenkins-docker.image_id
-    name  = "jenkins-docker-container"
-
-    volumes {
-        volume_name = docker_volume.my_volume.name
-        container_path = "/usr/share/nginx/html"
-    }
-    
-    ports {
-        internal = 2376
-        external = 2376
-    }
-    
-}
-
-resource "docker_image" "jenkins" {
-    name            = "myjenkins-blueocean:2.426.1-1"
-    keep_locally    = false    
-}
-
-resource "docker_container" "jenkins-blueocean" {
-    image = docker_image.jenkins.image_id
-    name  = "jenkins-blueocean"
-    ports {
-        internal = 80
-        external = 8080
-    }
-    env = [
-        "DOCKER_HOST=tcp://172.23.0.3:2376",
-        "DOCKER_CERT_PATH=/certs/clien"
-        "DOCKER_TLS_VERIFY=1",
-        "JAVA_OPTS=-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true",
-    ]
-}
-
-</pre>
-
+3. Se creará un archivo de configuración **`main.tf`** de Terraform.
 
 
 # Despliegue de una aplicación Python mediante un pipeline en Jenkins
