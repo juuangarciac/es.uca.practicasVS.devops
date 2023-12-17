@@ -79,7 +79,7 @@ resource "docker_container" "jenkins_blueocean" {
   restart = "on-failure"
 
   env = [
-    "DOCKER_HOST=tcp://docker:2376",
+    "DOCKER_HOST=tcp://127.23.0.3:2376",
     "DOCKER_CERT_PATH=/certs/client",
     "DOCKER_TLS_VERIFY=1",
     "JAVA_OPTS=-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true",
