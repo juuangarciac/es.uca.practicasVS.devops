@@ -41,32 +41,7 @@ sudo apt update && sudo apt install terraform
 
 ## Linux
 
-1. Abrimos una terminal
-
-2. Creamos una __bridge network__ (En términos de Docker, una red puente utiliza un puente de software que permite que los contenedores conectados a la misma red puente se comuniquen, al tiempo que proporciona aislamiento de los contenedores que no están conectados a esa red puente. El controlador del puente Docker instala automáticamente reglas en la máquina host para que los contenedores en diferentes redes puente no puedan comunicarse directamente entre sí.) en Docker, usando el siguiente comando:
-<pre>docker network create jenkins</pre>
-
-3. Para ejecutar comandos de Docker dentro de los nodos de Jenkins, descargue y ejecute la imagen de Docker docker:dind usando el siguiente comando de ejecución de Docker:
-    <pre>
-        docker run \
-        --name jenkins-docker \
-        --rm \
-        --detach \
-        --privileged \
-        --network jenkins \
-        --network-alias docker \
-        --env DOCKER_TLS_CERTDIR=/certs \
-        --volume jenkins-docker-certs:/certs/client \
-        --volume jenkins-data:/var/jenkins_home \
-        --publish 2376:2376 \
-        --publish 3000:3000 --publish 5000:5000 \
-        docker:dind \
-        --storage-driver overlay2 
-    </pre>
-
-    Este comando establece un entorno Docker dentro de Jenkins, facilitando la ejecución de comandos Docker para realizar diversas tareas, como construcción y despliegue de aplicaciones.
-
-4. Personalizamos la imagen oficial de Jenkins Docker, ejecutando los pasos siguientes:
+1. Personalizamos la imagen oficial de Jenkins Docker, ejecutando los pasos siguientes:
     - Crear un _Dockerfile_ . Este Dockerfile establece un entorno Jenkins con soporte Docker y plugins adicionales para funcionalidades específicas.
 
      <pre>
@@ -90,37 +65,7 @@ sudo apt update && sudo apt install terraform
             docker build --pull --rm -f "practicasVS/Terraform+SVC+Jenkins/Dockerfile" -t myjenkins-blueocean:2.426.1-1 "practicasVS/Terraform+SVC+Jenkins"
         </pre>
 
-        - **`docker build`**: Inicia el proceso de construcción de una imagen Docker.
-
-        - **`--pull`**: Solicita a Docker que siempre intente actualizar la imagen base (`--pull always`). Esto garantiza que se utilice la última versión de la imagen base si está disponible.
-
-        - **`--rm`**: Elimina el contenedor temporal intermedio después de que la imagen se ha construido con éxito, lo que ayuda a reducir la acumulación de contenedores no utilizados.
-
-        - **`-f "practicasVS/Terraform+SVC+Jenkins/Dockerfile"`**: Especifica la ruta al Dockerfile que se utilizará para la construcción de la imagen. En este caso, el Dockerfile se encuentra en la ruta "practicasVS/Terraform+SVC+Jenkins/Dockerfile".
-
-        - **`-t myjenkins-blueocean:2.426.1-1`**: Etiqueta la imagen resultante con el nombre `myjenkins-blueocean` y la versión `2.426.1-1`. Esta etiqueta facilita la identificación y referencia de la imagen.
-
-        - **`"practicasVS/Terraform+SVC+Jenkins"`**: Especifica el contexto de construcción. Todos los archivos y directorios dentro de esta ruta se enviarán al daemon de Docker para su procesamiento durante la construcción.
-
-    - Corremos nuestra propia imagen **`myjenkins-blueocean:2.426.1-1`** como contenedor de Docker usando el siguiente comando:
         ### Start Jenkins
-        <pre>
-            docker run \
-                --name jenkins-blueocean \
-                --detach \
-                --network jenkins \
-                --env DOCKER_HOST=tcp://docker:2376 \
-                --env DOCKER_CERT_PATH=/certs/client \
-                --env DOCKER_TLS_VERIFY=1 \
-                --publish 8080:8080 \
-                --publish 50000:50000 \
-                --volume jenkins-data:/var/jenkins_home \
-                --volume jenkins-docker-certs:/certs/client:ro \
-                --volume "$HOME":/home \
-                --restart=on-failure \
-                --env JAVA_OPTS="-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true" \
-            myjenkins-blueocean:2.426.1-1 
-        </pre>
 
 Enlace a [Interfaz Web de Jenkins](http://localhost:8080).
 
