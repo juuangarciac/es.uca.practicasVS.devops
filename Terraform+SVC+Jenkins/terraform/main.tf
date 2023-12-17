@@ -13,7 +13,7 @@ provider "docker" {
 
 # Crear red de Docker
 resource "docker_network" "jenkins_network" {
-  name   = "jenkins"
+  name   = "jenkins_default_network"
   driver = "bridge"
 }
 
@@ -35,17 +35,13 @@ resource "docker_container" "jenkins_docker" {
   network_mode = docker_network.jenkins_network.name
 
   volumes {
-    volume {
-      name      = docker_volume.jenkins_docker_certs.name
-      container = "/certs/client"
-    }
+    volume_name      = docker_volume.jenkins_docker_certs.name
+    container_path = "/certs/client"
   }
 
   volumes {
-    volume {
-      name      = docker_volume.jenkins_data.name
-      container = "/var/jenkins_home"
-    }
+    volume_name      = docker_volume.jenkins_data.name
+    container_path = "/var/jenkins_home"
   }
 
   command = ["--storage-driver", "overlay2"]
@@ -57,26 +53,27 @@ resource "docker_container" "jenkins_docker" {
 # Crear contenedor para jenkins-blueocean
 resource "docker_container" "jenkins_blueocean" {
   name         = "jenkins-blueocean"
-  image        = "myjenkins-blueocean"  # Assuming the image is already built
+  image        = "myjenkins-blueocean:2.426.1-1"  # Assuming the image is already built
   network_mode = docker_network.jenkins_network.name
 
   volumes {
-    volume {
-      name = docker_volume.jenkins_data.name
-    }
+    volume_name = docker_volume.jenkins_data.name
+    container_path = "/var/jenkins_home"
   }
 
   volumes {
-    volume {
-      name = docker_volume.jenkins_docker_certs.name
-    }
+    volume_name = docker_volume.jenkins_docker_certs.name
+    container_path = "/certs/client"
   }
 
   volumes {
-    volume {
-      host_path  = "$HOME"
-      container = "/home"
-    }
+    host_path  = "/home"
+    container_path = "/home"
+  }
+
+  ports {
+    internal = 8080
+    external = 8080
   }
 
   restart = "on-failure"
