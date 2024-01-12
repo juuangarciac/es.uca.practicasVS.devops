@@ -1,0 +1,54 @@
+image: python:3.9
+
+stages:
+  - build
+  - documentation
+
+variables:
+  SCRIPT_PATH: "python_script.py"
+  DATA_PATH: "SensorData.csv"
+  FIGSHARE_API_TOKEN: "715945f9a15bbc11841a01c999a3c4e07f39e2369072f9bfaee13ad78aa4166baabb60de29379cfe95ccc7380e72c78078efd65491d7c11d0922e6f867d3e539"
+
+before_script:
+  - apt-get update -qy
+  - pip install pandas matplotlib
+  - apt-get install -y git
+  - git config --global user.email "juuangarcandon@gmail.com"
+  - git config --global user.name "Juan Garcia Candon"
+  - git config --global credential.helper store
+  - echo "https://juuangarcandon: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@github.com" > ~/.git-credentials
+
+build_job:
+  stage: build
+  script:
+    - git clone https://gitlab.com/trabajovs/gitlab
+    - cd gitlab
+    - python3 $SCRIPT_PATH
+
+#upload_to_figshare:
+#  stage: upload
+#  script:
+#    - apt-get update -qy
+#    - apt-get install -y figshare-cli
+#    - figshare --token $FIGSHARE_API_TOKEN upload temperatura_humedad.png
+
+generate_documentation:
+  stage: documentation
+  script:
+    - apt-get update -qy
+    - apt-get install -y pandoc
+    - pip install pandoc
+    - pandoc Python_Script_README.md -o documentation.html
+    - cd ../
+    - git clone https://github.com/juuangarciac/es.vs.gitlab.workflow
+    - cd ./es.vs.gitlab.workflow
+    - cp /builds/trabajovs/gitlab/documentation.html ./index.html
+    - mkdir ./img
+    - mv /builds/trabajovs/gitlab/temperatura_humedad.png ./img/temperatura_humedad.png
+    - echo "<img src='img/temperatura_humedad.png'>" >> index.html
+    - git add ./
+    - git commit -m "Update HTML file"
+    - git push origin main
+    - echo "https://juuangarciac.github.io/es.vs.gitlab.workflow/"
+  only:
+    - main
