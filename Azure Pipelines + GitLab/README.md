@@ -52,6 +52,111 @@ Para configurar e instalar SonarQube en Azure Pipelines, se deben seguir los sig
 
 5. **Ejecutar el pipeline**: Guardar y ejecutar el pipeline. Si todo está configurado correctamente, debería ver los resultados del análisis de SonarQube en la interfaz de SonarQube después de que se complete la ejecución del pipeline.
 
+## Explicación del código
+
+# Explicación del archivo `pipeline.yaml`
+
+El archivo `pipeline.yaml` es una configuración de pipeline de CI/CD (Integración Continua / Entrega Continua) que define una serie de `stages` (etapas) y `jobs` (trabajos) que se ejecutan en cada etapa. Cada trabajo puede tener múltiples `steps` (pasos) que se ejecutan en orden. Aquí está la explicación detallada:
+
+## Stages
+
+### Stage: Docker_Build_and_Compose
+
+
+
+Este es el primer `stage` del pipeline. Contiene un `job` llamado `Build_and_Compose` que se ejecuta en una máquina virtual con la imagen 'ubuntu-latest'. Este trabajo tiene varios pasos:
+
+1. **Starting Docker Build and Compose**: Este paso imprime un mensaje en la consola para indicar que el proceso de construcción y composición de Docker ha comenzado.
+
+```yaml
+- stage: Docker_Build_and_Compose
+  jobs:
+  - job: Build_and_Compose
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: echo 'Starting Docker Build and Compose'
+        displayName: 'Starting Docker Build and Compose'
+
+```
+
+2. **Build Docker Image**: Este paso utiliza la tarea Docker@2 para construir una imagen de Docker a partir de un Dockerfile que se encuentra en cualquier subdirectorio del repositorio. La imagen se etiqueta como 'latest'.
+
+```yaml
+- task: Docker@2
+        displayName: 'Build Docker Image'
+        inputs:
+          command: 'build'
+          Dockerfile: '**/Dockerfile'
+          tags: 'latest'
+
+```
+
+3. **Push Docker Image to Registry**: Este paso también utiliza la tarea Docker@2 para empujar la imagen de Docker construida en el paso anterior a un registro de contenedores llamado 'trabajovscontenedor'.
+
+```yaml
+- task: Docker@2
+        displayName: 'Push Docker Image to Registry'
+        inputs:
+          command: 'push'
+          tags: 'latest'
+          containerRegistry: 'trabajovscontenedor'
+
+```
+
+4. **Docker Compose Up**: Este paso utiliza la tarea Docker@2 para ejecutar `docker-compose up` con un archivo `docker-compose.yml` que se encuentra en cualquier subdirectorio del repositorio (en este caso en la raiz). Esto inicia todos los servicios definidos en el archivo `docker-compose.yml` en modo detached (desacoplado) y elimina los contenedores existentes al tirar.
+
+```yaml
+- task: Docker@2
+        displayName: 'Docker Compose Up'
+        inputs:
+          command: 'composeUp'
+          dockerComposeFile: '**/docker-compose.yml'
+          removeContainersOnPull: true
+          detachedService: true
+
+```
+
+### Stage: SonarQube_Analysis
+
+Este es el segundo `stage` del pipeline. Contiene un `job` llamado `Analyze` que se ejecuta en una máquina virtual con la imagen 'ubuntu-latest'. Este trabajo tiene varios pasos:
+
+1. **SonarQubePrepare**: Este paso prepara el análisis de SonarQube. Se configura para usar el modo 'CLI' y la configuración 'manual'. El proyecto se identifica con la clave 'ProyectoVS-SonarQube-Key' y se analiza el directorio actual ('.').
+
+```yaml
+- task: SonarQubePrepare@4
+        inputs:
+          SonarQube: 'SonarQube' 
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'ProyectoVS-SonarQube-Key' 
+          cliSources: '.'
+
+```
+
+2. **docker build -t my-image .**: Este paso construye una imagen de Docker con la etiqueta 'my-image' a partir de un Dockerfile en el directorio actual.
+
+
+3. **docker save my-image | gzip > my-image.tar.gz**: Este paso guarda la imagen de Docker construida en el paso anterior en un archivo tar y luego comprime ese archivo con gzip.
+
+```yaml
+    - script: docker build -t my-image .
+    - script: docker save my-image | gzip > my-image.tar.gz
+```
+
+4. **SonarQubeAnalyze**: Este paso realiza el análisis de SonarQube.
+
+5. **SonarQubePublish**: Este paso publica los resultados del análisis de SonarQube. Se configura para esperar hasta 300 segundos para que el servidor de SonarQube procese los resultados del análisis.
+
+```yaml
+    - task: SonarQubeAnalyze@4
+      - task: SonarQubePublish@4
+        inputs:
+          pollingTimeoutSec: '300'
+```
+
+
+
 ## **Requisitos**
 
 Este pipeline requiere que se tenga un Dockerfile y un archivo docker-compose.yml en el repositorio. También se necesita tener un registro de contenedores configurado en Azure Pipelines y un proyecto en SonarQube.
