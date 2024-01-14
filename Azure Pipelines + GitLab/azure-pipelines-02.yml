@@ -1,0 +1,45 @@
+trigger:
+  - master
+
+stages:
+- stage: Terraform
+  jobs:
+  - job: Apply
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: UseDotNet@2
+        inputs:
+          packageType: 'sdk'
+          version: '3.1.x'
+          installationPath: $(Agent.ToolsDirectory)/dotnet
+
+      - script: |
+          terraform init
+          terraform validate
+        displayName: 'Terraform Init and Validate'
+
+      - script: 'terraform plan -out=tfplan'
+        displayName: 'Terraform Plan'
+
+      - script: 'terraform apply -auto-approve tfplan'
+        displayName: 'Terraform Apply'
+
+- stage: SonarQube_Analysis
+  jobs:
+  - job: Analyze
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: SonarQubePrepare@4
+        inputs:
+          SonarQube: 'SonarQube' 
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'ProyectoVS02-SonarQube-Key' 
+          cliSources: '.'
+
+      - task: SonarQubeAnalyze@4
+      - task: SonarQubePublish@4
+        inputs:
+          pollingTimeoutSec: '300'
