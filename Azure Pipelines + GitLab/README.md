@@ -268,6 +268,24 @@ La configuración `SonarQube_Analysis` se implementa de la misma manera que en e
 
 ## Preparación del entorno
 
+### Uso de GitHub Tokens
+
+Los tokens de acceso personal de GitHub, conocidos como Personal `Access Tokens (PAT)`, son una alternativa segura a las contraseñas para la autenticación en GitHub cuando se utiliza la API de GitHub o la línea de comandos. Estos tokens permiten acceder a los recursos de GitHub en tu nombre sin utilizar tu contraseña, lo que es especialmente útil en scripts y en la int
+
+Para generar un token de acceso personal (PAT) en GitHub, sigue estos pasos:
+
+1. Inicia sesión en GitHub con tu cuenta.
+2. Ve a tu perfil en la esquina superior derecha y selecciona Settings (Configuración).
+3. En la barra lateral izquierda, selecciona Developer settings (Configuración del desarrollador).
+4. Luego, en la misma barra lateral, elige Personal access tokens (Tokens de acceso personal).
+5. Haz clic en Generate new token (Generar nuevo token).
+6. Te pedirán que ingreses tu contraseña de GitHub para verificar tu identidad.
+7. En la página de nuevo token, proporciona un nombre para tu token para identificarlo más tarde.
+8. Establece una fecha de expiración para tu token. Puedes elegir entre diferentes duraciones o no establecer ninguna para que no expire.
+9. Selecciona los permisos o scopes que deseas que tenga el token. Estos determinarán qué acciones puede realizar el token en tu nombre.
+10. Una vez que hayas configurado los permisos, haz clic en Generate token (Generar token) al final de la página.
+11. Recibirás un nuevo PAT que podrás usar en lugar de tu contraseña. Asegúrate de copiar y guardar tu PAT en un lugar seguro, ya que no podrás verlo nuevamente después de salir de la página.
+
 ### Declaración de la Imagen 
 
 Debido a que se va a  trabajar con una aplicación desarrollada en `python`. El pipeline configurado se ejecuta sobre un contenedor, con la imagen de `python:3.9`.
