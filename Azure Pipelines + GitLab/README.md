@@ -54,7 +54,7 @@ Para configurar e instalar SonarQube en Azure Pipelines, se deben seguir los sig
 
 ## Explicación del código
 
-# Explicación del archivo `pipeline.yaml`
+## Explicación del archivo `pipeline.yaml`
 
 El archivo `pipeline.yaml` es una configuración de pipeline de CI/CD (Integración Continua / Entrega Continua) que define una serie de `stages` (etapas) y `jobs` (trabajos) que se ejecutan en cada etapa. Cada trabajo puede tener múltiples `steps` (pasos) que se ejecutan en orden. Aquí está la explicación detallada:
 
